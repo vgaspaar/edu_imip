@@ -1,0 +1,39 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.Python
+
+# Ambiente virtual
+venv/
+env/
+.venv/
+
+# Banco de dados (não versionar dados locais)
+database/imip.db
+*.db
+*.sqlite3
+
+# Variáveis de ambiente e segredos
+.env
+.env.local
+*.env
+
+# Flask / sistema
+instance/
+.flask_session/
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Sistema operacional
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+logs/
