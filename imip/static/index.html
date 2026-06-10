@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>IMIP Alfabetiza</title>
+
+  <!-- Fontes -->
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Baloo+2:wght@700;800&display=swap" rel="stylesheet"/>
+
+  <!-- CSS separado -->
+  <link rel="stylesheet" href="/static/css/style.css"/>
+</head>
+<body>
+
+<!-- ── Skip link de acessibilidade ── -->
+<a href="#conteudo-principal" class="skip-link">Ir para o conteúdo principal</a>
+
+<!-- ── Live region para leitores de tela ── -->
+<div class="sr-live" aria-live="assertive" aria-atomic="true" id="sr-live"></div>
+
+<!-- ════════════════════ NAV ════════════════════ -->
+<header role="banner">
+  <nav class="nav" aria-label="Navegação principal">
+    <a href="#" class="nav-logo" onclick="irPara('inicio')" aria-label="IMIP Alfabetiza — página inicial">
+      <span class="nav-logo-icon" aria-hidden="true">🦁</span>
+      IMIP Alfabetiza
+    </a>
+    <ul class="nav-menu" role="list">
+      <li><a href="#" onclick="irPara('inicio')"    id="nav-inicio">Início</a></li>
+      <li><a href="#" onclick="irPara('jogo')"      id="nav-jogo">🔤 Jogo</a></li>
+      <li><a href="#" onclick="irPara('historias')" id="nav-historias">📖 Histórias</a></li>
+      <li><a href="#" onclick="irPara('vogais')"    id="nav-vogais">🅰️ Vogais</a></li>
+      <li><a href="#" onclick="irPara('silabas')"   id="nav-silabas">🎵 Sílabas</a></li>
+      <li><a href="#" onclick="irPara('professor')" id="nav-professor">👩‍🏫 Professor</a></li>
+    </ul>
+    <div class="nav-auth" aria-label="Autenticação">
+      <span class="nav-user" id="nav-nome-usuario" hidden></span>
+      <button class="btn btn-outline btn-sm" id="btn-logout" hidden onclick="logout()" aria-label="Sair do sistema">Sair</button>
+    </div>
+  </nav>
+</header>
+
+<!-- ════════════════════ MAIN ════════════════════ -->
+<main id="conteudo-principal">
+
+  <!-- ─────────── PÁGINA INÍCIO ─────────── -->
+  <div id="page-inicio" class="page ativa" role="region" aria-label="Início">
+    <section class="hero" aria-labelledby="hero-titulo">
+      <span class="hero-mascote" role="img" aria-label="Léo, o leãozinho mascote">🦁</span>
+      <h1 id="hero-titulo">Aprender é uma<br/><em>aventura</em> incrível!</h1>
+      <p class="hero-sub">Olá! Aqui você vai aprender letras, palavras e histórias com a ajuda do Léo! 🎉</p>
+      <div class="hero-btns">
+        <button class="btn btn-verde btn-lg" onclick="irPara('jogo')">🎮 Jogar agora!</button>
+        <button class="btn btn-primario btn-lg" onclick="irPara('historias')">📖 Ler história</button>
+      </div>
+    </section>
+
+    <section class="secao" aria-labelledby="atividades-titulo">
+      <h2 class="secao-titulo" id="atividades-titulo">📚 O que você quer fazer?</h2>
+      <p class="secao-sub">Escolha uma atividade divertida!</p>
+      <div class="grade" role="list">
+        <button role="listitem" class="card-ativ azul" onclick="irPara('jogo')" aria-label="Jogo de Letras — complete a palavra certa">
+          <span class="card-ativ-emoji" aria-hidden="true">🔤</span>
+          <span class="card-ativ-nome">Jogo de Letras</span>
+          <span class="card-ativ-desc">Complete a palavra certa!</span>
+          <span class="badge" style="background:var(--azul-cl);color:var(--azul-txt)">⭐ Favorito</span>
+        </button>
+        <button role="listitem" class="card-ativ verde" onclick="irPara('historias')" aria-label="Histórias — leia com Léo e amigos">
+          <span class="card-ativ-emoji" aria-hidden="true">📖</span>
+          <span class="card-ativ-nome">Histórias</span>
+          <span class="card-ativ-desc">Leia com Léo e amigos!</span>
+          <span class="badge" style="background:var(--verde-cl);color:var(--verde-txt)">✨ Novo</span>
+        </button>
+        <button role="listitem" class="card-ativ rosa" onclick="irPara('vogais')" aria-label="Vogais — aprenda A, E, I, O, U">
+          <span class="card-ativ-emoji" aria-hidden="true">🅰️</span>
+          <span class="card-ativ-nome">Vogais</span>
+          <span class="card-ativ-desc">A, E, I, O, U!</span>
+          <span class="badge" style="background:var(--rosa-cl);color:var(--rosa)">🌈 Colorido</span>
+        </button>
+        <button role="listitem" class="card-ativ roxo" onclick="irPara('silabas')" aria-label="Sílabas — Ba-ta-ta, bo-lo, be-lê">
+          <span class="card-ativ-emoji" aria-hidden="true">🎵</span>
+          <span class="card-ativ-nome">Sílabas</span>
+          <span class="card-ativ-desc">Ba-ta-ta, bo-lo, be-lê!</span>
+          <span class="badge" style="background:var(--roxo-cl);color:var(--roxo)">🎶 Musical</span>
+        </button>
+        <button role="listitem" class="card-ativ amarelo" onclick="irPara('progresso')" aria-label="Meu Progresso — veja suas estrelas">
+          <span class="card-ativ-emoji" aria-hidden="true">🌟</span>
+          <span class="card-ativ-nome">Meu Progresso</span>
+          <span class="card-ativ-desc">Veja suas estrelas!</span>
+          <span class="badge" style="background:var(--amar-cl);color:var(--amarelo)">📊 Desempenho</span>
+        </button>
+      </div>
+    </section>
+  </div>
+
+  <!-- ─────────── PÁGINA JOGO ─────────── -->
+  <div id="page-jogo" class="page" role="region" aria-label="Jogo de Letras">
+    <div class="jogo-wrap">
+      <h2 class="secao-titulo">🔤 Jogo de Letras</h2>
+      <p class="secao-sub">Clique nas letras para completar a palavra!</p>
+
+      <div class="nivel-selector" role="group" aria-label="Escolher nível de dificuldade">
+        <button class="nivel-btn" aria-pressed="true"  data-nivel="iniciante"     onclick="mudarNivelJogo(this)">🌱 Iniciante</button>
+        <button class="nivel-btn" aria-pressed="false" data-nivel="intermediario" onclick="mudarNivelJogo(this)">⭐ Médio</button>
+        <button class="nivel-btn" aria-pressed="false" data-nivel="avancado"      onclick="mudarNivelJogo(this)">🚀 Avançado</button>
+      </div>
+
+      <div id="jogo-loading" class="loading" aria-live="polite">
+        <div class="spinner" aria-hidden="true"></div> Carregando atividade…
+      </div>
+
+      <div id="jogo-conteudo" hidden>
+        <div class="jogo-card" aria-live="polite" aria-atomic="true">
+          <p class="jogo-instrucao">Que animal é esse? Clique nas letras na ordem certa! 🎯</p>
+          <span class="jogo-emoji" id="jogo-emoji" role="img" aria-label="Imagem da palavra"></span>
+          <p class="jogo-dica-texto" id="jogo-dica-txt" aria-label="Dica da palavra"></p>
+        </div>
+
+        <div class="resposta-area" id="resposta-area" role="group" aria-label="Letras escolhidas"></div>
+        <div class="letras-area"   id="letras-area"   role="group" aria-label="Letras disponíveis"></div>
+
+        <div class="feedback-jogo" id="feedback-jogo" role="status" aria-live="polite" aria-atomic="true"></div>
+
+        <div class="jogo-acoes">
+          <button class="btn btn-amarelo"  onclick="darDicaJogo()"   id="btn-dica">💡 Dica</button>
+          <button class="btn btn-verde"    onclick="verificarJogo()">✅ Verificar</button>
+          <button class="btn btn-primario" onclick="proximaJogo()">➡️ Próxima</button>
+        </div>
+
+        <p style="text-align:center;margin-top:1rem;color:var(--texto-cl);font-size:0.88rem" aria-live="polite">
+          Palavra <span id="jogo-atual-num">1</span> de <span id="jogo-total">?</span>
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─────────── PÁGINA HISTÓRIAS ─────────── -->
+  <div id="page-historias" class="page" role="region" aria-label="Histórias">
+    <div class="secao">
+      <h2 class="secao-titulo">📖 Histórias para ler</h2>
+      <p class="secao-sub">Clique nas palavras destacadas para ouvi-las! 🔊</p>
+
+      <div id="historias-loading" class="loading" aria-live="polite">
+        <div class="spinner" aria-hidden="true"></div> Carregando história…
+      </div>
+
+      <div id="historias-conteudo" hidden>
+        <article class="historia-card" aria-live="polite" aria-atomic="true">
+          <div class="historia-header">
+            <span id="historia-emoji" role="img" aria-label="Mascote da história" class="big-emoji">🦁</span>
+            <div>
+              <h2 id="historia-titulo"></h2>
+              <p  id="historia-meta"></p>
+            </div>
+          </div>
+          <div class="historia-texto" id="historia-texto"></div>
+        </article>
+        <div class="historia-nav">
+          <button class="btn btn-primario" onclick="anteriorHistoria()">⬅️ Anterior</button>
+          <button class="btn btn-verde"    onclick="proximaHistoria()">➡️ Próxima</button>
+        </div>
+        <p class="historia-contador" aria-live="polite" id="historia-contador"></p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─────────── PÁGINA VOGAIS ─────────── -->
+  <div id="page-vogais" class="page" role="region" aria-label="Vogais">
+    <div class="secao">
+      <h2 class="secao-titulo">🅰️ As Vogais</h2>
+      <p class="secao-sub">Clique em cada vogal para ouvi-la e ver um exemplo!</p>
+
+      <div id="vogais-loading" class="loading" aria-live="polite">
+        <div class="spinner" aria-hidden="true"></div> Carregando vogais…
+      </div>
+      <div id="vogais-conteudo" hidden>
+        <div class="vogais-grade" id="vogais-grade" role="list" aria-label="Vogais do alfabeto"></div>
+        <div id="vogal-detalhe" aria-live="polite" style="text-align:center;margin-top:1rem;font-size:1.1rem;font-weight:700;color:var(--texto-cl)">
+          Clique em uma vogal para ver o exemplo!
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─────────── PÁGINA SÍLABAS ─────────── -->
+  <div id="page-silabas" class="page" role="region" aria-label="Sílabas">
+    <div class="secao">
+      <h2 class="secao-titulo">🎵 Famílias de Sílabas</h2>
+      <p class="secao-sub">Clique em uma consoante para ver sua família de sílabas!</p>
+
+      <div id="silabas-loading" class="loading" aria-live="polite">
+        <div class="spinner" aria-hidden="true"></div> Carregando sílabas…
+      </div>
+      <div id="silabas-conteudo" hidden>
+        <div class="familia-selector" id="familia-selector" role="group" aria-label="Escolher família de sílabas"></div>
+        <div id="silabas-display-area" aria-live="polite">
+          <div class="silabas-display" id="silabas-display"></div>
+          <ul class="exemplo-lista" id="exemplos-lista" aria-label="Palavras de exemplo"></ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─────────── PÁGINA PROGRESSO ─────────── -->
+  <div id="page-progresso" class="page" role="region" aria-label="Meu progresso">
+    <div class="secao">
+      <h2 class="secao-titulo">🌟 Meu Progresso</h2>
+      <p class="secao-sub">Veja quantas estrelas você ganhou hoje!</p>
+      <div class="prog-grade">
+        <div class="prog-card">
+          <div class="prog-num" style="color:var(--amarelo)" id="prog-estrelas">0 ⭐</div>
+          <div class="prog-label">Estrelas</div>
+          <div class="prog-bar-wrap"><div class="prog-bar" id="prog-bar-estrelas" style="background:var(--amarelo);width:0%"></div></div>
+        </div>
+        <div class="prog-card">
+          <div class="prog-num" style="color:var(--verde)" id="prog-acertos">0</div>
+          <div class="prog-label">Acertos</div>
+          <div class="prog-bar-wrap"><div class="prog-bar" id="prog-bar-acertos" style="background:var(--verde);width:0%"></div></div>
+        </div>
+        <div class="prog-card">
+          <div class="prog-num" style="color:var(--azul)" id="prog-concluidas">0</div>
+          <div class="prog-label">Atividades feitas</div>
+          <div class="prog-bar-wrap"><div class="prog-bar" id="prog-bar-concluidas" style="background:var(--azul);width:0%"></div></div>
+        </div>
+      </div>
+      <p style="color:var(--texto-cl);font-size:0.88rem;text-align:center">Progresso salvo localmente nesta sessão.</p>
+    </div>
+  </div>
+
+  <!-- ─────────── PÁGINA PROFESSOR ─────────── -->
+  <div id="page-professor" class="page" role="region" aria-label="Área do professor">
+
+    <!-- LOGIN / REGISTRO -->
+    <div id="area-login">
+      <div class="login-box">
+        <h2>👩‍🏫 Entrar</h2>
+        <p class="login-sub">Professores e extensionistas do IMIP</p>
+
+        <div class="tab-grupo" role="tablist" aria-label="Modo de acesso">
+          <button role="tab" aria-selected="true"  class="tab-btn" id="tab-entrar"
+            onclick="trocarTab('entrar')"    aria-controls="painel-entrar">Entrar</button>
+          <button role="tab" aria-selected="false" class="tab-btn" id="tab-registrar"
+            onclick="trocarTab('registrar')" aria-controls="painel-registrar">Criar conta</button>
+        </div>
+
+        <!-- Formulário Login -->
+        <div id="painel-entrar" role="tabpanel" aria-labelledby="tab-entrar">
+          <div class="erro-geral" id="erro-login" role="alert"></div>
+          <div class="campo">
+            <label for="login-email">📧 E-mail institucional</label>
+            <input type="email" id="login-email" name="email" autocomplete="email"
+              placeholder="seu@imip.org.br" aria-required="true"/>
+          </div>
+          <div class="campo">
+            <label for="login-senha">🔒 Senha</label>
+            <input type="password" id="login-senha" name="password" autocomplete="current-password"
+              placeholder="••••••••" aria-required="true"/>
+          </div>
+          <button class="btn btn-primario btn-full" onclick="fazerLogin()" aria-label="Entrar no sistema">
+            Entrar no sistema 🚀
+          </button>
+        </div>
+
+        <!-- Formulário Registro -->
+        <div id="painel-registrar" role="tabpanel" aria-labelledby="tab-registrar" hidden>
+          <div class="erro-geral"  id="erro-registro"   role="alert"></div>
+          <div class="sucesso-msg" id="sucesso-registro" role="status"></div>
+          <div class="campo">
+            <label for="reg-nome">👤 Nome completo</label>
+            <input type="text" id="reg-nome" name="nome" autocomplete="name"
+              placeholder="Maria da Silva" aria-required="true"/>
+          </div>
+          <div class="campo">
+            <label for="reg-email">📧 E-mail institucional</label>
+            <input type="email" id="reg-email" name="email" autocomplete="email"
+              placeholder="seu@imip.org.br" aria-required="true"/>
+          </div>
+          <div class="campo">
+            <label for="reg-senha">🔒 Senha (mínimo 6 caracteres)</label>
+            <input type="password" id="reg-senha" name="password" autocomplete="new-password"
+              placeholder="••••••••" aria-required="true" minlength="6"/>
+          </div>
+          <div class="campo">
+            <label for="reg-role">🎓 Perfil</label>
+            <select id="reg-role" aria-required="true">
+              <option value="">-- Selecione --</option>
+              <option value="professor">Professor</option>
+              <option value="extensionista">Extensionista</option>
+            </select>
+          </div>
+          <div class="campo">
+            <label for="reg-ala">🏥 Ala / Setor</label>
+            <select id="reg-ala" aria-required="true">
+              <option value="">-- Selecione --</option>
+              <option>Pediatria A</option>
+              <option>Pediatria B</option>
+              <option>Oncologia Pediátrica</option>
+              <option>UTI Neonatal</option>
+              <option>Cirurgia Pediátrica</option>
+            </select>
+          </div>
+          <button class="btn btn-verde btn-full" onclick="fazerRegistro()" aria-label="Criar conta">
+            Criar conta ✅
+          </button>
+        </div>
+
+        <p class="divisor">🔐 Dados protegidos pela LGPD</p>
+      </div>
+    </div>
+
+    <!-- PAINEL PROFESSOR (após login) -->
+    <div id="area-painel" hidden>
+      <div class="painel">
+        <div class="painel-topo">
+          <h2 id="painel-bemvindo">Olá, Professor!</h2>
+          <button class="btn btn-primario btn-sm" onclick="abrirFormCrianca()" aria-label="Cadastrar nova criança">
+            ➕ Nova criança
+          </button>
+        </div>
+
+        <div class="resumo-grade" id="resumo-grade" aria-label="Resumo do painel">
+          <div class="loading"><div class="spinner" aria-hidden="true"></div></div>
+        </div>
+
+        <!-- Formulário nova criança -->
+        <div class="form-crianca" id="form-crianca" hidden>
+          <h3>➕ Cadastrar nova criança</h3>
+          <div class="erro-geral"  id="erro-crianca"   role="alert"></div>
+          <div class="sucesso-msg" id="sucesso-crianca" role="status"></div>
+          <div class="grade-campos">
+            <div class="campo">
+              <label for="cri-nome">Nome fictício (anonimizado)</label>
+              <input type="text" id="cri-nome" placeholder="Ex: Leãozinho, Borboleta…" aria-required="true"/>
+            </div>
+            <div class="campo">
+              <label for="cri-idade">Idade</label>
+              <input type="number" id="cri-idade" min="4" max="18" placeholder="Ex: 8" aria-required="true"/>
+            </div>
+            <div class="campo">
+              <label for="cri-nivel">Nível de alfabetização</label>
+              <select id="cri-nivel" aria-required="true">
+                <option value="iniciante">🌱 Iniciante</option>
+                <option value="intermediario">⭐ Intermediário</option>
+                <option value="avancado">🚀 Avançado</option>
+              </select>
+            </div>
+          </div>
+          <div style="display:flex;gap:0.7rem;margin-top:1rem">
+            <button class="btn btn-verde"  onclick="cadastrarCrianca()">Salvar ✅</button>
+            <button class="btn" style="background:var(--bg);border:2px solid var(--borda)" onclick="fecharFormCrianca()">Cancelar</button>
+          </div>
+        </div>
+
+        <h3 style="font-family:'Baloo 2',cursive;font-size:1.1rem;margin-bottom:0.8rem">👧👦 Crianças cadastradas</h3>
+        <div id="tabela-wrap" aria-live="polite">
+          <div class="loading"><div class="spinner" aria-hidden="true"></div> Carregando…</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+</main>
+
+<!-- ════════════════════ FOOTER ════════════════════ -->
+<footer role="contentinfo">
+  <p><strong>IMIP Alfabetiza</strong> — Sistema de Apoio à Decisão Pedagógica</p>
+  <p style="margin-top:0.4rem">Instituto de Medicina Integral Prof. Fernando Figueira · Recife, PE</p>
+  <p style="margin-top:0.3rem;font-size:0.78rem">
+    Dados protegidos pela LGPD ·
+    <a href="#" onclick="irPara('professor')">Área do professor</a>
+  </p>
+</footer>
+
+<!-- ════════════════════ TOAST ════════════════════ -->
+<div class="toast" id="toast" role="status" aria-live="polite" aria-atomic="true"></div>
+
+<!-- JS separado -->
+<script src="/static/js/main.js"></script>
+
+</body>
+</html>
