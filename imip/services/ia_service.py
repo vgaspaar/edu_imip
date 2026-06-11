@@ -8,17 +8,14 @@ Não usa SDK — apenas requests (stdlib-like, já disponível).
 
 import os
 import json
+import time
 import requests
-from dotenv import load_dotenv
 
-load_dotenv()
+# Cache simples em memória para evitar rate limit (429)
+_cache = {}
+_CACHE_TTL = 300  # 5 minutos
 
-
-GEMINI_API_KEY = os.environ.get("GEMINI_API_KEY", "")
-GEMINI_URL = (
-    f"https://generativelanguage.googleapis.com/v1beta/models/"
-    f"gemini-1.5-flash:generateContent?key={GEMINI_API_KEY}"
-)
+GEMINI_URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key={key}"
 
 # Prompt base que contextualiza o modelo para o IMIP
 SISTEMA = """
@@ -37,8 +34,16 @@ Regras OBRIGATÓRIAS:
 
 def _chamar_gemini(prompt: str, max_tokens: int = 800) -> dict | None:
     """Faz a chamada REST ao Gemini. Retorna o JSON parseado ou None."""
+    GEMINI_API_KEY = os.environ.get("GEMINI_API_KEY", "")
     if not GEMINI_API_KEY:
         return None
+
+    # Verifica cache
+    cache_key = prompt[:120]
+    if cache_key in _cache:
+        ts, valor = _cache[cache_key]
+        if time.time() - ts < _CACHE_TTL:
+            return valor
 
     payload = {
         "contents": [
@@ -56,7 +61,7 @@ def _chamar_gemini(prompt: str, max_tokens: int = 800) -> dict | None:
 
     try:
         resp = requests.post(
-            GEMINI_URL.format(key=GEMINI_API_KEY),
+            GEMINI_URL.format(key=os.environ.get("GEMINI_API_KEY", "")),
             json=payload,
             timeout=15,
         )
@@ -65,7 +70,9 @@ def _chamar_gemini(prompt: str, max_tokens: int = 800) -> dict | None:
         texto = data["candidates"][0]["content"]["parts"][0]["text"]
         # Remove possíveis blocos de código que o modelo insira mesmo assim
         texto = texto.strip().lstrip("```json").lstrip("```").rstrip("```").strip()
-        return json.loads(texto)
+        resultado = json.loads(texto)
+        _cache[cache_key] = (time.time(), resultado)
+        return resultado
     except Exception as e:
         print(f"[ia_service] Erro Gemini: {e}")
         return None
@@ -211,4 +218,4 @@ Retorne APENAS este JSON:
 # 5. VERIFICAR SE A IA ESTÁ DISPONÍVEL
 # ─────────────────────────────────────────────────────────────────
 def ia_disponivel() -> bool:
-    return bool(GEMINI_API_KEY)
+    return bool(os.environ.get("GEMINI_API_KEY", ""))

@@ -6,13 +6,7 @@ Todas assíncronas por natureza — geram conteúdo novo a cada chamada.
 """
 
 from flask import Blueprint, request, jsonify
-from services.ia_service import (
-    gerar_historia,
-    gerar_palavras_jogo,
-    gerar_dica_palavra,
-    gerar_elogio,
-    ia_disponivel,
-)
+import services.ia_service as ia_service
 
 ia_bp = Blueprint("ia", __name__, url_prefix="/api/ia")
 
@@ -20,7 +14,7 @@ ia_bp = Blueprint("ia", __name__, url_prefix="/api/ia")
 # ── GET /api/ia/status ────────────────────────────────────────────
 @ia_bp.route("/status", methods=["GET"])
 def status():
-    return jsonify({"disponivel": ia_disponivel()})
+    return jsonify({"disponivel": ia_service.ia_disponivel()})
 
 
 # ── GET /api/ia/historia?nivel=iniciante&tema=animais ─────────────
@@ -31,7 +25,7 @@ def historia():
     if nivel not in ("iniciante", "intermediario", "avancado"):
         nivel = "iniciante"
 
-    resultado = gerar_historia(nivel=nivel, tema=tema)
+    resultado = ia_service.gerar_historia(nivel=nivel, tema=tema)
     return jsonify(resultado)
 
 
@@ -43,8 +37,8 @@ def palavras():
     if nivel not in ("iniciante", "intermediario", "avancado"):
         nivel = "iniciante"
 
-    resultado = gerar_palavras_jogo(nivel=nivel, quantidade=quantidade)
-    return jsonify({"palavras": resultado, "nivel": nivel, "ia": ia_disponivel()})
+    resultado = ia_service.gerar_palavras_jogo(nivel=nivel, quantidade=quantidade)
+    return jsonify({"palavras": resultado, "nivel": nivel, "ia": ia_service.ia_disponivel()})
 
 
 # ── GET /api/ia/dica?palavra=ELEFANTE&nivel=iniciante ─────────────
@@ -55,7 +49,7 @@ def dica():
     if not palavra:
         return jsonify({"erro": "Parâmetro 'palavra' obrigatório."}), 400
 
-    dica_texto = gerar_dica_palavra(palavra=palavra, nivel=nivel)
+    dica_texto = ia_service.gerar_dica_palavra(palavra=palavra, nivel=nivel)
     return jsonify({"dica": dica_texto, "palavra": palavra})
 
 
@@ -63,7 +57,7 @@ def dica():
 @ia_bp.route("/elogio", methods=["GET"])
 def elogio():
     nome = request.args.get("nome", "amiguinho").strip()
-    return jsonify({"elogio": gerar_elogio(nome_crianca=nome)})
+    return jsonify({"elogio": ia_service.gerar_elogio(nome_crianca=nome)})
 
 
 # ── POST /api/ia/historia_personalizada ──────────────────────────
@@ -81,5 +75,5 @@ def historia_personalizada():
     if nome_crianca:
         tema = f"{tema}, com personagem chamado {nome_crianca}"
 
-    resultado = gerar_historia(nivel=nivel, tema=tema)
+    resultado = ia_service.gerar_historia(nivel=nivel, tema=tema)
     return jsonify(resultado)

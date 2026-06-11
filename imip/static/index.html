@@ -36,7 +36,10 @@
     </ul>
     <div class="nav-auth" aria-label="Autenticação">
       <span class="nav-user" id="nav-nome-usuario" hidden></span>
-      <button class="btn btn-outline btn-sm" id="btn-logout" hidden onclick="logout()" aria-label="Sair do sistema">Sair</button>
+      <button class="btn btn-outline btn-sm" id="btn-logout"
+        style="display:none" onclick="logout()" aria-label="Sair do sistema">
+        🚪 Sair
+      </button>
     </div>
   </nav>
 </header>
@@ -50,10 +53,7 @@
       <span class="hero-mascote" role="img" aria-label="Léo, o leãozinho mascote">🦁</span>
       <h1 id="hero-titulo">Aprender é uma<br/><em>aventura</em> incrível!</h1>
       <p class="hero-sub">Olá! Aqui você vai aprender letras, palavras e histórias com a ajuda do Léo! 🎉</p>
-      <div class="hero-btns">
-        <button class="btn btn-verde btn-lg" onclick="irPara('jogo')">🎮 Jogar agora!</button>
-        <button class="btn btn-primario btn-lg" onclick="irPara('historias')">📖 Ler história</button>
-      </div>
+
     </section>
 
     <section class="secao" aria-labelledby="atividades-titulo">
@@ -110,9 +110,9 @@
         <div class="spinner" aria-hidden="true"></div> Carregando atividade…
       </div>
 
-      <div id="jogo-conteudo" hidden>
+      <div id="jogo-conteudo">
         <div class="jogo-card" aria-live="polite" aria-atomic="true">
-          <p class="jogo-instrucao">Que animal é esse? Clique nas letras na ordem certa! 🎯</p>
+          <p class="jogo-instrucao">Que nome é esse? Clique nas letras na ordem certa! 🎯</p>
           <span class="jogo-emoji" id="jogo-emoji" role="img" aria-label="Imagem da palavra"></span>
           <p class="jogo-dica-texto" id="jogo-dica-txt" aria-label="Dica da palavra"></p>
         </div>
@@ -124,6 +124,8 @@
 
         <div class="jogo-acoes">
           <button class="btn btn-amarelo"  onclick="darDicaJogo()"   id="btn-dica">💡 Dica</button>
+          <button class="btn" style="background:#EF4444;color:white;border-color:#EF4444"
+            onclick="apagarLetra()" aria-label="Apagar última letra">⌫ Apagar</button>
           <button class="btn btn-verde"    onclick="verificarJogo()">✅ Verificar</button>
           <button class="btn btn-primario" onclick="proximaJogo()">➡️ Próxima</button>
         </div>
@@ -145,7 +147,7 @@
         <div class="spinner" aria-hidden="true"></div> Carregando história…
       </div>
 
-      <div id="historias-conteudo" hidden>
+      <div id="historias-conteudo">
         <article class="historia-card" aria-live="polite" aria-atomic="true">
           <div class="historia-header">
             <span id="historia-emoji" role="img" aria-label="Mascote da história" class="big-emoji">🦁</span>
@@ -174,7 +176,7 @@
       <div id="vogais-loading" class="loading" aria-live="polite">
         <div class="spinner" aria-hidden="true"></div> Carregando vogais…
       </div>
-      <div id="vogais-conteudo" hidden>
+      <div id="vogais-conteudo">
         <div class="vogais-grade" id="vogais-grade" role="list" aria-label="Vogais do alfabeto"></div>
         <div id="vogal-detalhe" aria-live="polite" style="text-align:center;margin-top:1rem;font-size:1.1rem;font-weight:700;color:var(--texto-cl)">
           Clique em uma vogal para ver o exemplo!
@@ -192,7 +194,7 @@
       <div id="silabas-loading" class="loading" aria-live="polite">
         <div class="spinner" aria-hidden="true"></div> Carregando sílabas…
       </div>
-      <div id="silabas-conteudo" hidden>
+      <div id="silabas-conteudo">
         <div class="familia-selector" id="familia-selector" role="group" aria-label="Escolher família de sílabas"></div>
         <div id="silabas-display-area" aria-live="polite">
           <div class="silabas-display" id="silabas-display"></div>
@@ -234,64 +236,34 @@
     <!-- LOGIN / REGISTRO -->
     <div id="area-login">
       <div class="login-box">
-        <h2>👩‍🏫 Entrar</h2>
-        <p class="login-sub">Professores e extensionistas do IMIP</p>
 
-        <div class="tab-grupo" role="tablist" aria-label="Modo de acesso">
-          <button role="tab" aria-selected="true"  class="tab-btn" id="tab-entrar"
-            onclick="trocarTab('entrar')"    aria-controls="painel-entrar">Entrar</button>
-          <button role="tab" aria-selected="false" class="tab-btn" id="tab-registrar"
-            onclick="trocarTab('registrar')" aria-controls="painel-registrar">Criar conta</button>
-        </div>
-
-        <!-- Formulário Login -->
-        <div id="painel-entrar" role="tabpanel" aria-labelledby="tab-entrar">
-          <div class="erro-geral" id="erro-login" role="alert"></div>
-          <div class="campo">
-            <label for="login-email">📧 E-mail institucional</label>
-            <input type="email" id="login-email" name="email" autocomplete="email"
-              placeholder="seu@imip.org.br" aria-required="true"/>
-          </div>
-          <div class="campo">
-            <label for="login-senha">🔒 Senha</label>
-            <input type="password" id="login-senha" name="password" autocomplete="current-password"
-              placeholder="••••••••" aria-required="true"/>
-          </div>
-          <button class="btn btn-primario btn-full" onclick="fazerLogin()" aria-label="Entrar no sistema">
-            Entrar no sistema 🚀
+        <!-- SELETOR DE PERFIL -->
+        <div class="perfil-selector" role="group" aria-label="Quem é você?">
+          <button class="perfil-btn ativo" id="perfil-crianca"
+            onclick="trocarPerfil('crianca')" aria-pressed="true">
+            🧒 Sou criança
+          </button>
+          <button class="perfil-btn" id="perfil-professor"
+            onclick="trocarPerfil('professor')" aria-pressed="false">
+            👩‍🏫 Sou professor
           </button>
         </div>
 
-        <!-- Formulário Registro -->
-        <div id="painel-registrar" role="tabpanel" aria-labelledby="tab-registrar" hidden>
-          <div class="erro-geral"  id="erro-registro"   role="alert"></div>
-          <div class="sucesso-msg" id="sucesso-registro" role="status"></div>
+        <!-- ── ACESSO CRIANÇA ── -->
+        <div id="painel-crianca">
+          <h2 style="text-align:center;margin-bottom:.25rem">Olá! 👋</h2>
+          <p class="login-sub">Digite seu apelido para começar a brincar!</p>
+          <div class="erro-geral" id="erro-crianca-login" role="alert"></div>
           <div class="campo">
-            <label for="reg-nome">👤 Nome completo</label>
-            <input type="text" id="reg-nome" name="nome" autocomplete="name"
-              placeholder="Maria da Silva" aria-required="true"/>
+            <label for="crianca-apelido">🦁 Seu apelido</label>
+            <input type="text" id="crianca-apelido" name="apelido"
+              placeholder="Ex: Leãozinho, Borboleta…"
+              autocomplete="nickname" aria-required="true"
+              maxlength="30"/>
           </div>
           <div class="campo">
-            <label for="reg-email">📧 E-mail institucional</label>
-            <input type="email" id="reg-email" name="email" autocomplete="email"
-              placeholder="seu@imip.org.br" aria-required="true"/>
-          </div>
-          <div class="campo">
-            <label for="reg-senha">🔒 Senha (mínimo 6 caracteres)</label>
-            <input type="password" id="reg-senha" name="password" autocomplete="new-password"
-              placeholder="••••••••" aria-required="true" minlength="6"/>
-          </div>
-          <div class="campo">
-            <label for="reg-role">🎓 Perfil</label>
-            <select id="reg-role" aria-required="true">
-              <option value="">-- Selecione --</option>
-              <option value="professor">Professor</option>
-              <option value="extensionista">Extensionista</option>
-            </select>
-          </div>
-          <div class="campo">
-            <label for="reg-ala">🏥 Ala / Setor</label>
-            <select id="reg-ala" aria-required="true">
+            <label for="crianca-ala">🏥 Sua ala</label>
+            <select id="crianca-ala" aria-required="true">
               <option value="">-- Selecione --</option>
               <option>Pediatria A</option>
               <option>Pediatria B</option>
@@ -300,9 +272,83 @@
               <option>Cirurgia Pediátrica</option>
             </select>
           </div>
-          <button class="btn btn-verde btn-full" onclick="fazerRegistro()" aria-label="Criar conta">
-            Criar conta ✅
+          <button class="btn btn-verde btn-full" onclick="entrarComoCrianca()"
+            aria-label="Entrar como criança e começar a brincar">
+            Vamos brincar! 🎮
           </button>
+        </div>
+
+        <!-- ── ACESSO PROFESSOR ── -->
+        <div id="painel-professor-login" hidden>
+          <div class="tab-grupo" role="tablist" aria-label="Modo de acesso">
+            <button role="tab" aria-selected="true"  class="tab-btn" id="tab-entrar"
+              onclick="trocarTab('entrar')"    aria-controls="painel-entrar">Entrar</button>
+            <button role="tab" aria-selected="false" class="tab-btn" id="tab-registrar"
+              onclick="trocarTab('registrar')" aria-controls="painel-registrar">Criar conta</button>
+          </div>
+
+          <!-- Formulário Login -->
+          <div id="painel-entrar" role="tabpanel" aria-labelledby="tab-entrar">
+            <div class="erro-geral" id="erro-login" role="alert"></div>
+            <div class="campo">
+              <label for="login-email">📧 E-mail institucional</label>
+              <input type="email" id="login-email" name="email" autocomplete="email"
+                placeholder="seu@imip.org.br" aria-required="true"/>
+            </div>
+            <div class="campo">
+              <label for="login-senha">🔒 Senha</label>
+              <input type="password" id="login-senha" name="password" autocomplete="current-password"
+                placeholder="••••••••" aria-required="true"/>
+            </div>
+            <button class="btn btn-primario btn-full" onclick="fazerLogin()"
+              aria-label="Entrar no sistema">
+              Entrar no sistema 🚀
+            </button>
+          </div>
+
+          <!-- Formulário Registro -->
+          <div id="painel-registrar" role="tabpanel" aria-labelledby="tab-registrar" hidden>
+            <div class="erro-geral"  id="erro-registro"   role="alert"></div>
+            <div class="sucesso-msg" id="sucesso-registro" role="status"></div>
+            <div class="campo">
+              <label for="reg-nome">👤 Nome completo</label>
+              <input type="text" id="reg-nome" name="nome" autocomplete="name"
+                placeholder="Maria da Silva" aria-required="true"/>
+            </div>
+            <div class="campo">
+              <label for="reg-email">📧 E-mail institucional</label>
+              <input type="email" id="reg-email" name="email" autocomplete="email"
+                placeholder="seu@imip.org.br" aria-required="true"/>
+            </div>
+            <div class="campo">
+              <label for="reg-senha">🔒 Senha (mínimo 6 caracteres)</label>
+              <input type="password" id="reg-senha" name="password" autocomplete="new-password"
+                placeholder="••••••••" aria-required="true" minlength="6"/>
+            </div>
+            <div class="campo">
+              <label for="reg-role">🎓 Perfil</label>
+              <select id="reg-role" aria-required="true">
+                <option value="">-- Selecione --</option>
+                <option value="professor">Professor</option>
+                <option value="extensionista">Extensionista</option>
+              </select>
+            </div>
+            <div class="campo">
+              <label for="reg-ala">🏥 Ala / Setor</label>
+              <select id="reg-ala" aria-required="true">
+                <option value="">-- Selecione --</option>
+                <option>Pediatria A</option>
+                <option>Pediatria B</option>
+                <option>Oncologia Pediátrica</option>
+                <option>UTI Neonatal</option>
+                <option>Cirurgia Pediátrica</option>
+              </select>
+            </div>
+            <button class="btn btn-verde btn-full" onclick="fazerRegistro()"
+              aria-label="Criar conta">
+              Criar conta ✅
+            </button>
+          </div>
         </div>
 
         <p class="divisor">🔐 Dados protegidos pela LGPD</p>

@@ -3,8 +3,8 @@
 // ─── ESTADO GLOBAL ──────────────────────────────────────────────
 const estado = {
   paginaAtual: "inicio",
-  paginaAtual: "professor",
   usuarioLogado: null,
+  _iaVerificada: false,
   jogo:      { palavras: [], indice: 0, nivel: "iniciante", resposta: [], dicaUsada: false },
   historias: { lista: [], indice: 0 },
   vogais:    null,
@@ -60,8 +60,8 @@ function irPara(pagina) {
   const h = el.querySelector("h1,h2");
   if (h) { h.setAttribute("tabindex", "-1"); h.focus(); }
 
-  if (pagina === "jogo"      && estado.jogo.palavras.length === 0) carregarJogo();
-  if (pagina === "historias" && estado.historias.lista.length === 0) carregarHistorias();
+  if (pagina === "jogo"      && estado.jogo.palavras.length === 0 && estado._iaVerificada) carregarJogo();
+  if (pagina === "historias" && estado.historias.lista.length === 0 && estado._iaVerificada) carregarHistorias();
   if (pagina === "vogais"    && !estado.vogais)  carregarVogais();
   if (pagina === "silabas"   && !estado.silabas) carregarSilabas();
   if (pagina === "professor") verificarAuth();
@@ -83,14 +83,14 @@ async function api(metodo, rota, corpo = null) {
 function mostrarLoading(pagina) {
   const l = document.getElementById(pagina + "-loading");
   const c = document.getElementById(pagina + "-conteudo");
-  if (l) l.hidden = false;
-  if (c) c.hidden = true;
+  if (l) { l.style.display = "flex";  l.removeAttribute("hidden"); }
+  if (c) { c.style.display = "none";  c.setAttribute("hidden",""); }
 }
 function esconderLoading(pagina) {
   const l = document.getElementById(pagina + "-loading");
   const c = document.getElementById(pagina + "-conteudo");
-  if (l) l.hidden = true;
-  if (c) c.hidden = false;
+  if (l) { l.style.display = "none";  l.setAttribute("hidden",""); }
+  if (c) { c.style.display = "block"; c.removeAttribute("hidden"); }
 }
 
 // ══════════════════════════════════════════════════════════════════
@@ -128,6 +128,7 @@ function mostrarJogo() {
   if (!item) return;
 
   estado.jogo.resposta  = new Array(item.palavra.length).fill("");
+  estado.jogo.botoes    = [];
   estado.jogo.dicaUsada = false;
 
   const emojiEl = document.getElementById("jogo-emoji");
@@ -170,11 +171,15 @@ function mostrarJogo() {
 
 function embaralharLetras(palavra) {
   const extras = "ABCDEFGHIJKLMNOPRSTUVZ";
-  const set = new Set([...palavra]);
-  while (set.size < Math.min(palavra.length + 4, 12)) {
-    set.add(extras[Math.floor(Math.random() * extras.length)]);
+  // Inclui TODAS as letras da palavra (com repetição)
+  const letras = [...palavra];
+  // Adiciona letras extras (distratoras) sem repetir as já presentes
+  const distratoras = new Set();
+  while (distratoras.size < Math.min(4, 14 - letras.length)) {
+    const l = extras[Math.floor(Math.random() * extras.length)];
+    if (!palavra.includes(l)) distratoras.add(l);
   }
-  return [...set].sort(() => Math.random() - 0.5);
+  return [...letras, ...distratoras].sort(() => Math.random() - 0.5);
 }
 
 function clicarLetra(btn, letra) {
@@ -182,7 +187,11 @@ function clicarLetra(btn, letra) {
   const primeiroVazio = estado.jogo.resposta.findIndex(l => l === "");
   if (primeiroVazio === -1) return;
 
+  // Guarda referência do botão no slot para poder desfazer
   estado.jogo.resposta[primeiroVazio] = letra;
+  estado.jogo.botoes = estado.jogo.botoes || [];
+  estado.jogo.botoes[primeiroVazio] = btn;
+
   const slot = document.getElementById("slot-" + primeiroVazio);
   slot.textContent = letra;
   slot.classList.add("preenchido");
@@ -195,7 +204,38 @@ function clicarLetra(btn, letra) {
     btn.classList.add("erro");
     setTimeout(() => btn.classList.remove("erro"), 400);
   }
+  btn.style.opacity = "0.4";
   btn.disabled = true;
+}
+
+
+function apagarLetra() {
+  // Acha o último slot preenchido
+  let ultimo = -1;
+  for (let i = 0; i < estado.jogo.resposta.length; i++) {
+    if (estado.jogo.resposta[i] !== "") ultimo = i;
+  }
+  if (ultimo === -1) return;
+
+  // Restaura o botão correspondente
+  const btn = estado.jogo.botoes && estado.jogo.botoes[ultimo];
+  if (btn) {
+    btn.disabled = false;
+    btn.style.opacity = "1";
+    btn.classList.remove("acerto", "erro");
+  }
+
+  // Limpa o slot
+  estado.jogo.resposta[ultimo] = "";
+  const slot = document.getElementById("slot-" + ultimo);
+  slot.textContent = "";
+  slot.classList.remove("preenchido");
+  slot.setAttribute("aria-label", `Posição ${ultimo + 1}: vazio`);
+
+  // Limpa feedback
+  const fb = document.getElementById("feedback-jogo");
+  fb.textContent = "";
+  fb.removeAttribute("data-status");
 }
 
 async function verificarJogo() {
@@ -477,7 +517,7 @@ async function verificarAuth() {
     document.getElementById("area-login").hidden  = false;
     document.getElementById("area-painel").hidden = true;
     document.getElementById("nav-nome-usuario").hidden = true;
-    document.getElementById("btn-logout").hidden       = true;
+    document.getElementById("btn-logout").style.display = "none";
   }
 }
 
@@ -512,7 +552,6 @@ async function fazerLogin() {
   if (ok) {
     estado.usuarioLogado = dados.usuario;
     mostrarPainel(dados.usuario);
-    irPara("inicio");
   } else {
     erroEl.textContent = dados.erro || "Erro ao entrar.";
     erroEl.classList.add("visivel");
@@ -549,7 +588,7 @@ async function logout() {
   document.getElementById("area-login").hidden  = false;
   document.getElementById("area-painel").hidden = true;
   document.getElementById("nav-nome-usuario").hidden = true;
-  document.getElementById("btn-logout").hidden       = true;
+  document.getElementById("btn-logout").style.display = "none";
   toast("Sessão encerrada.");
   anunciar("Você saiu do sistema.");
 }
@@ -562,7 +601,7 @@ async function mostrarPainel(usuario) {
   document.getElementById("area-painel").hidden = false;
   document.getElementById("nav-nome-usuario").hidden    = false;
   document.getElementById("nav-nome-usuario").textContent = "👋 " + usuario.nome.split(" ")[0];
-  document.getElementById("btn-logout").hidden = false;
+  document.getElementById("btn-logout").style.display = "inline-flex";
   document.getElementById("painel-bemvindo").textContent =
     `Olá, ${usuario.nome.split(" ")[0]}! (${usuario.role} — ${usuario.ala})`;
   carregarResumo();
@@ -681,11 +720,73 @@ async function buscarElogio() {
   document.head.appendChild(s);
 })();
 
+
+// ══════════════════════════════════════════════════════════════════
+// ACESSO CRIANÇA
+// ══════════════════════════════════════════════════════════════════
+function trocarPerfil(perfil) {
+  const painelCrianca    = document.getElementById("painel-crianca");
+  const painelProfessor  = document.getElementById("painel-professor-login");
+  const btnCrianca       = document.getElementById("perfil-crianca");
+  const btnProfessor     = document.getElementById("perfil-professor");
+
+  if (perfil === "crianca") {
+    painelCrianca.hidden   = false;
+    painelProfessor.hidden = true;
+    btnCrianca.classList.add("ativo");
+    btnProfessor.classList.remove("ativo");
+    btnCrianca.setAttribute("aria-pressed", "true");
+    btnProfessor.setAttribute("aria-pressed", "false");
+  } else {
+    painelCrianca.hidden   = true;
+    painelProfessor.hidden = false;
+    btnCrianca.classList.remove("ativo");
+    btnProfessor.classList.add("ativo");
+    btnCrianca.setAttribute("aria-pressed", "false");
+    btnProfessor.setAttribute("aria-pressed", "true");
+  }
+}
+
+function entrarComoCrianca() {
+  const apelido = document.getElementById("crianca-apelido").value.trim();
+  const ala     = document.getElementById("crianca-ala").value;
+  const erroEl  = document.getElementById("erro-crianca-login");
+  erroEl.textContent = "";
+  erroEl.classList.remove("visivel");
+
+  if (!apelido) {
+    erroEl.textContent = "Digite seu apelido para continuar!";
+    erroEl.classList.add("visivel");
+    anunciar("Digite seu apelido para continuar.");
+    return;
+  }
+  if (!ala) {
+    erroEl.textContent = "Selecione sua ala!";
+    erroEl.classList.add("visivel");
+    anunciar("Selecione sua ala.");
+    return;
+  }
+
+  // Salva criança localmente (sem login formal)
+  estado.usuarioLogado = { nome: apelido, role: "crianca", ala };
+  document.getElementById("area-login").hidden  = true;
+  document.getElementById("area-painel").hidden = true;
+  document.getElementById("nav-nome-usuario").hidden      = false;
+  document.getElementById("nav-nome-usuario").textContent = "🦁 " + apelido;
+  document.getElementById("btn-logout").style.display     = "inline-flex";
+
+  toast(`Olá, ${apelido}! Vamos aprender! 🎉`);
+  falar(`Olá, ${apelido}! Vamos aprender!`);
+  anunciar(`Bem-vindo, ${apelido}!`);
+  irPara("inicio");
+}
+
 // ══════════════════════════════════════════════════════════════════
 // INICIALIZAÇÃO
 // ══════════════════════════════════════════════════════════════════
 document.addEventListener("DOMContentLoaded", async () => {
   await verificarIA();
+  estado._iaVerificada = true;
   irPara("inicio");
 
   api("GET", "/api/auth/me").then(({ ok, dados }) => {
@@ -693,7 +794,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       estado.usuarioLogado = dados.usuario;
       document.getElementById("nav-nome-usuario").hidden      = false;
       document.getElementById("nav-nome-usuario").textContent = "👋 " + dados.usuario.nome.split(" ")[0];
-      document.getElementById("btn-logout").hidden = false;
+      document.getElementById("btn-logout").style.display = "inline-flex";
     }
   });
 });
