@@ -1,7 +1,4 @@
-"""
-Camada de banco de dados - SQLite3 puro.
-Todas as operações de dados passam por aqui.
-"""
+
 
 import sqlite3
 import os

@@ -1,7 +1,3 @@
-"""
-Blueprint de relatórios pedagógicos.
-Apenas professores/extensionistas autenticados.
-"""
 
 from flask import Blueprint, request, jsonify
 from database.db import get_db

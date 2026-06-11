@@ -1,6 +1,4 @@
-"""
-app.py — Ponto de entrada da aplicação IMIP Alfabetiza.
-"""
+
 
 import os
 from flask import Flask, send_from_directory

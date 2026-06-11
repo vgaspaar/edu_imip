@@ -1,7 +1,4 @@
-"""
-Blueprint de autenticação.
-Rotas: /login  /logout  /registrar  /me
-"""
+
 
 from flask import Blueprint, request, jsonify, make_response
 from database.db import get_db

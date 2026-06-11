@@ -1,9 +1,3 @@
-"""
-blueprints/ia/routes.py
-
-Rotas de IA generativa (Gemini).
-Todas assíncronas por natureza — geram conteúdo novo a cada chamada.
-"""
 
 from flask import Blueprint, request, jsonify
 import services.ia_service as ia_service

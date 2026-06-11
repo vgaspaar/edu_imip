@@ -1,7 +1,3 @@
-"""
-Blueprint de atividades pedagógicas.
-Rotas públicas (as crianças não fazem login).
-"""
 
 import json
 from flask import Blueprint, request, jsonify

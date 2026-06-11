@@ -1,10 +1,4 @@
-"""
-services/ia_service.py
 
-Integração com Google Gemini (grátis) via REST.
-Gera histórias, palavras e dicas personalizadas para crianças internadas.
-Não usa SDK — apenas requests (stdlib-like, já disponível).
-"""
 
 import os
 import json

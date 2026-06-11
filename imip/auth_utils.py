@@ -1,7 +1,4 @@
-"""
-Utilitários de autenticação.
-Usa hashlib (stdlib) para bcrypt-like hashing e secrets para tokens.
-"""
+
 
 import hashlib
 import hmac
